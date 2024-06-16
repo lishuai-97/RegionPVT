@@ -1,17 +1,86 @@
-# RegionPVT
-Repo of "Regional-to-Local Point-Voxel Transformer for Large-scale Indoor Semantic Segmentation". (The code is coming soon!) 
+# Regional-to-Local Point-Voxel Transformer (RegionPVT)
 
----
-Semantic segmentation of large-scale indoor 3D point cloud scenes is crucial for scene understanding but faces challenges in effectively modeling long-range dependencies and multi-scale features. In this paper, we present **RegionPVT**, a novel Regional-to-Local Point-Voxel Transformer that synergistically integrates voxel-based regional self-attention and window-based point-voxel self-attention for concurrent coarse-grained and fine-grained feature learning. The voxel-based regional branch focuses on capturing regional context and facilitating inter-window communication. The window-based point-voxel branch concentrates on local feature learning while integrating voxel-level information within each window. This unique design enables the model to jointly extract local details and regional structures efficiently and provides an effective and efficient solution for multi-scale feature fusion and a comprehensive understanding of 3D point clouds. Extensive experiments on S3DIS and ScanNet v2 datasets demonstrate that our RegionPVT achieves competitive or superior performance compared with state-of-the-art approaches, attaining mIoUs of 71.0\% and 73.9\% respectively, with significantly lower memory footprint.
-
-
-<div style="text-align:center">
-<img src="./figs/network_structure.png">
-</div>
-
----
-Bellow is the illustration of our Regional-to-Local (R2L) Point-Voxel Transformer Encoder. To make it intuitive, we present it in 2D domain. The red stars denote the voxels with features and black points indicate similar for point clouds. $V_{i}$ represents the $i$-th regional token, while $P_{i}$ denotes the corresponding local token set in the $i$-th window. All regional tokens (voxels) are first passed through the voxel-based regional self-attention (Voxel-based Self-attention) to exchange the information among neighboring voxels and then window-based point-voxel self-attention (Point-Voxel Self-Attention) performs parallel self-attention where each takes one regional token and corresponding local tokens (points). After that, all the tokens are passed through the feed-forward network and split back to the regional and local tokens. Finally, only the local tokens are passed to the next layer.
+This is the official PyTorch implementation of the paper **Regional-to-Local Point-Voxel Transformer for Large-scale Indoor 3D Point Cloud Semantic Segmentation**
 
 <div style="text-align:center">
 <img src="./figs/R2L_Encoder_Block.png">
 </div>
+
+# Get Started
+
+## Environment
+
+1. Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+2. Compile pointops2
+
+Make sure you have installed `gcc` and `cuda`, and `nvcc` can work (Note that if you install cuda by conda, it won't provide nvcc and you should install cuda manually.). Then, compile and install pointops2 as follows. (We have tested on `gcc==7.5.0\9.4.0`, `pytorch==1.12.1` and `cuda==11.3`).
+
+```bash
+# pytorch > 1.12.1 is also OK
+cd lib/pointops2
+python3 setup.py install
+cd ../..
+```
+
+3. Compile MinkowskiEngine
+
+```bash
+# For CUDA 10.2, must use GCC < 8, our GCC is 9.4.0
+sudo apt-get install libopenblas-dev
+cd thirdparty
+git clone https://github.com/NVIDIA/MinkowskiEngine.git
+cd MinkowskiEngine-master
+python setup.py install --blas_include_dirs=${CONDA_PREFIX}/include --blas=openblas
+cd ../..
+```
+4. Compile cuda_ops for LightWeightSelfAttention
+
+```bash
+cd libs/cuda_ops
+pip3 install .
+cd ../..
+```
+
+See [env.md](env.md) for more details.
+
+## Datasets Preparation
+
+### S3DIS
+Please refer to https://github.com/yanx27/Pointnet_Pointnet2_pytorch for S3DIS preprocessing. Then modify the `data_root` entry in the .yaml configuration file.
+
+### ScanNetv2
+Please refer to https://github.com/dvlab-research/PointGroup for the ScanNetv2 preprocessing. Then change the `data_root` entry in the .yaml configuration file accordingly.
+
+
+## Training
+
+### S3DIS
+
+```bash
+python3 train_regionpvt.py --config config/s3dis/s3dis_regionpvt.yaml
+```
+
+### ScanNetv2
+
+```bash
+python3 train_regionpvt.py --config config/scannetv2/scannetv2_regionpvt.yaml
+```
+
+Note: It is normal to see the the results on S3DIS fluctuate between -0.5\% and +0.5\% mIoU maybe because the size of S3DIS is relatively small, while the results on ScanNetv2 are relatively stable.
+
+
+## Testing
+For testing, first change the `model_path`, `save_folder` and `data_root_val` (if applicable) accordingly. Then, run the following command. 
+
+```bash
+python3 test_regionpvt.py --config [YOUR_CONFIG_PATH]
+```
+
+## Acknowledgements
+
+Our code is based on the [Stratified-Transformer](https://github.com/dvlab-research/Stratified-Transformer) and [FastPointTransformer](https://github.com/POSTECH-CVLab/FastPointTransformer). If you use our model, please consider citing them as well.
