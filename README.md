@@ -56,6 +56,7 @@ Please refer to https://github.com/yanx27/Pointnet_Pointnet2_pytorch for S3DIS p
 ### ScanNetv2
 Please refer to https://github.com/dvlab-research/PointGroup for the ScanNetv2 preprocessing. Then change the `data_root` entry in the .yaml configuration file accordingly.
 
+See [data_utils](data_utils/README.md) for more details.
 
 ## Training
 
