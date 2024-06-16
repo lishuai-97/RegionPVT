@@ -58,13 +58,6 @@ python setup.py install --blas_include_dirs=${CONDA_PREFIX}/include --blas=openb
 cd ../..
 ```
 
-## Other dependences for FastPointTransformer
-
-```bash
-# For cuda_ops
-pip install gin-config
-```
-
 ## Compile cuda_ops for LightWeightSelfAttention
 
 ```bash
