@@ -18,7 +18,7 @@ pip install -r requirements.txt
 
 2. Compile pointops2
 
-Make sure you have installed `gcc` and `cuda`, and `nvcc` can work (Note that if you install cuda by conda, it won't provide nvcc and you should install cuda manually.). Then, compile and install pointops2 as follows. (We have tested on `gcc==7.5.0\9.4.0`, `pytorch==1.12.1` and `cuda==11.3`).
+Make sure you have installed `gcc` and `cuda`, and `nvcc` can work (Note that if you install cuda by conda, it won't provide nvcc and you should install cuda manually.). Then, compile and install pointops2 as follows. (We have tested on `gcc==9.4.0`, `pytorch==1.12.1` and `cuda==11.3`).
 
 ```bash
 # pytorch > 1.12.1 is also OK
@@ -30,12 +30,11 @@ cd ../..
 3. Compile MinkowskiEngine
 
 ```bash
-# For CUDA 10.2, must use GCC < 8, our GCC is 9.4.0
 sudo apt-get install libopenblas-dev
 cd thirdparty
 git clone https://github.com/NVIDIA/MinkowskiEngine.git
 cd MinkowskiEngine-master
-python setup.py install --blas_include_dirs=${CONDA_PREFIX}/include --blas=openblas
+python3 setup.py install --blas_include_dirs=${CONDA_PREFIX}/include --blas=openblas
 cd ../..
 ```
 4. Compile cuda_ops for LightWeightSelfAttention
@@ -45,8 +44,6 @@ cd libs/cuda_ops
 pip3 install .
 cd ../..
 ```
-
-See [env.md](env.md) for more details.
 
 ## Datasets Preparation
 
