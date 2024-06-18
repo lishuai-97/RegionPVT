@@ -8,7 +8,7 @@ Modefied from https://github.com/yanx27/Pointnet_Pointnet2_pytorch for S3DIS pre
 python collect_indoor3d_data.py
 ```
 
-Processed data will save in `output_folder='/home/lishuai375/data/stanford_indoor3d'`
+Processed data will save in `output_folder='data/stanford_indoor3d'`
 
 
 # ScanNetv2
